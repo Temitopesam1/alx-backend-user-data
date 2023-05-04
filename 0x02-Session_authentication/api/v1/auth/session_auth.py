@@ -24,7 +24,7 @@ class SessionAuth(Auth):
     def user_id_for_session_id(self, session_id: str = None) -> str:
         """returns user ID based on session ID
         """
-        if session_id is None or not isinstance(session_id,str):
+        if session_id is None or not isinstance(session_id, str):
             return None
         return self.user_id_by_session_id.get(session_id)
 
@@ -34,3 +34,18 @@ class SessionAuth(Auth):
         sessionId = self.session_cookie(request)
         userId = self.user_id_for_session_id(sessionId)
         return User.get(userId)
+
+    def destroy_session(self, request=None) -> bool:
+        """A method that deletes the user session / logout
+        """
+        if request:
+            sessId = self.session_cookie(request)
+            if sessId:
+                usrId = self.user_id_for_session_id(sessId)
+                if usrId:
+                    del self.user_id_by_session_id[sessId]
+                    return True
+        return False
+
+
+

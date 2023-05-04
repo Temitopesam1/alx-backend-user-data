@@ -2,7 +2,6 @@
 """A view that handles all routes for the Session authentication
 """
 import os
-from flask import session
 from api.v1.views import app_views
 from flask import abort, jsonify, request
 from models.user import User
@@ -37,6 +36,20 @@ def auth_session_login() -> str:
             from api.v1.app import auth
             sessId = auth.create_session(usrObj.id)
             sessName = os.getenv('SESSION_NAME')
-            session[sessName] = sessId
-            return jsonify(usrObj.to_json(), session[sessName])
+            response = jsonify(usrObj.to_json())
+            response.set_cookie(sessName, sessId)
+            return response
 
+@app_views.route('auth_session/logout', methods=['DELETE'], strict_slashes=False)
+def auth_session_logout() -> bool:
+    """ DELETE /api/v1/auth_session/logout
+    Path parameter:
+      - request
+    Return:
+      - empty JSON if the User has been correctly deleted
+      - 404 if not
+    """
+    from api.v1.app import auth
+    if auth.destroy_session(request) == True:
+        return jsonify({}), 200
+    return False, abort(404)
