@@ -22,16 +22,16 @@ def auth_session_login() -> str:
     email = request.form.get('email')
     password = request.form.get('password')
     if (email is None or email == ""):
-        return jsonify({ "error": "email missing" }), 400
+        return jsonify({"error": "email missing"}), 400
     elif(password is None or password == ""):
-        return jsonify({ "error": "password missing" }), 400
+        return jsonify({"error": "password missing"}), 400
 
-    userObjList =  User.search({ 'email': email })
+    userObjList = User.search({'email': email})
     if not userObjList:
-        return jsonify({ "error": "no user found for this email" }), 404
+        return jsonify({"error": "no user found for this email"}), 404
     for usrObj in userObjList:
         if not usrObj.is_valid_password(password):
-            return jsonify({ "error": "wrong password" }), 401
+            return jsonify({"error": "wrong password"}), 401
         else:
             from api.v1.app import auth
             sessId = auth.create_session(usrObj.id)
@@ -40,16 +40,18 @@ def auth_session_login() -> str:
             response.set_cookie(sessName, sessId)
             return response
 
-@app_views.route('auth_session/logout', methods=['DELETE'], strict_slashes=False)
+
+@app_views.route('auth_session/logout',
+                 methods=['DELETE'],
+                 strict_slashes=False
+)
 def auth_session_logout() -> bool:
     """ DELETE /api/v1/auth_session/logout
-    Path parameter:
-      - request
     Return:
       - empty JSON if the User has been correctly deleted
       - 404 if not
     """
     from api.v1.app import auth
-    if auth.destroy_session(request) == True:
+    if auth.destroy_session(request):
         return jsonify({}), 200
     return False, abort(404)
