@@ -43,7 +43,7 @@ class DB:
         """method to find user by keyword argument
         """
         for key, val in kwargs.items():
-            if not key in User.__dict__.keys():
+            if key not in User.__dict__.keys():
                 raise InvalidRequestError()
             else:
                 attr = getattr(User, key)
@@ -52,7 +52,7 @@ class DB:
                     raise NoResultFound()
             return result
 
-    def update_user(self, id: int, **kwargs) -> User:
+    def update_user(self, id: int, **kwargs) -> None:
         """method to update user by id
         """
         usr = self.find_user_by(id=id)
@@ -66,4 +66,3 @@ class DB:
                         synchronize_session=False)
                 self._session.commit()
                 return None
-
