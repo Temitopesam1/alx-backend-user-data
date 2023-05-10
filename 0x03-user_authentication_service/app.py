@@ -9,7 +9,7 @@ AUTH = Auth()
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET'], strict_slashes=False)
+@app.route("/", methods=["GET"], strict_slashes=False)
 def hello() -> str:
     """ GET /
     Return:
@@ -18,7 +18,7 @@ def hello() -> str:
     return jsonify({"message": "Bienvenue"})
 
 
-@app.route('/users', methods=['POST'], strict_slashes=False)
+@app.route("/users", methods=["POST"], strict_slashes=False)
 def users() -> str:
     """ POST /users
     JSON body:
@@ -37,7 +37,7 @@ def users() -> str:
     return jsonify({"email": email, "message": "user created"})
 
 
-@app.route('/sessions', methods=['POST'], strict_slashes=False)
+@app.route("/sessions", methods=["POST"], strict_slashes=False)
 def login() -> str:
     """ POST /sessions
     JSON body:
@@ -57,7 +57,7 @@ def login() -> str:
     abort(401)
 
 
-@app.route('/sessions', methods=['DELETE'], strict_slashes=False)
+@app.route("/sessions", methods=["DELETE"], strict_slashes=False)
 def logout() -> str:
     """ DELETE /sessions
     JSON body:
@@ -71,12 +71,12 @@ def logout() -> str:
     usr = AUTH.get_user_from_session_id(sessId)
     if usr is not None:
         AUTH.destroy_session(usr.id)
-        return redirect('/')
+        return redirect("/")
     else:
         abort(403)
 
 
-@app.route('/profile', methods=['GET'], strict_slashes=False)
+@app.route("/profile", methods=["GET"], strict_slashes=False)
 def profile() -> str:
     """ GET /profile
     Return:
@@ -91,7 +91,7 @@ def profile() -> str:
         abort(403)
 
 
-@app.route('/reset_password', methods=['POST'], strict_slashes=False)
+@app.route("/reset_password", methods=["POST"], strict_slashes=False)
 def get_reset_password_token() -> str:
     """ POST /reset_password
     JSON body:
@@ -108,7 +108,7 @@ def get_reset_password_token() -> str:
         abort(403)
 
 
-@app.route('/reset_password', methods=['PUT'], strict_slashes=False)
+@app.route("/reset_password", methods=["PUT"], strict_slashes=False)
 def update_password() -> str:
     """ PUT /reset_password
     JSON body:
