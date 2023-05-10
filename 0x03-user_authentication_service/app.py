@@ -9,7 +9,7 @@ AUTH = Auth()
 app = Flask(__name__)
 
 
-@app.route('/', strict_slashes=False)
+@app.route('/', methods=['GET'], strict_slashes=False)
 def hello() -> str:
     """ GET /
     Return:
@@ -76,7 +76,7 @@ def logout() -> str:
         abort(403)
 
 
-@app.route('/profile', strict_slashes=False)
+@app.route('/profile', methods=['GET'], strict_slashes=False)
 def profile() -> str:
     """ GET /profile
     Return:
